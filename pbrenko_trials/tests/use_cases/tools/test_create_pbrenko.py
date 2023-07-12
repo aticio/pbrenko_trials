@@ -1,8 +1,13 @@
-from pbrenko_trials.domain.pbrenko import PBRenko
 from pbrenko_trials.domain.brick import Brick
+from pbrenko_trials.domain.pbrenko import PBRenko
+from pbrenko_trials.use_cases.tools.pbrenko_creator import PBRenkoCreator
 
 
-def test_pbrenko_model_init():
+def test_create_pbrenko():
+    data = [100, 110, 125, 130, 150, 140, 120, 110, 105, 115, 135, 145]
+    percent = 10
+    number_of_leaks = 0
+
     brick_1 = Brick(
         type="up",
         open=100,
@@ -69,10 +74,11 @@ def test_pbrenko_model_init():
 
     pb_renko = PBRenko(
         bricks=[brick_1, brick_2, brick_3, brick_4, brick_5, brick_6, brick_7, brick_8],
-        percent=10,
-        number_of_leaks=0,
+        percent=percent,
+        number_of_leaks=number_of_leaks,
     )
 
-    assert pb_renko.bricks == [brick_1, brick_2, brick_3, brick_4, brick_5, brick_6, brick_7, brick_8]
-    assert pb_renko.percent == 10
-    assert pb_renko.number_of_leaks == 0
+    pbrenko_creator = PBRenkoCreator()
+    result = pbrenko_creator.create_pbrenko(data, percent)
+
+    assert pb_renko == result
