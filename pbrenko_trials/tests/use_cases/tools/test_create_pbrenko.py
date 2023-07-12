@@ -8,10 +8,18 @@ def test_create_pbrenko():
     percent = 10
     number_of_leaks = 0
 
+    brick_0 = Brick(
+        type="first",
+        open=100,
+        close=100,
+        high=100,
+        low=100,
+    )
+
     brick_1 = Brick(
         type="up",
         open=100,
-        close=100,
+        close=110,
         high=110,
         low=100,
     )
@@ -20,62 +28,64 @@ def test_create_pbrenko():
         type="up",
         open=110,
         close=121,
-        high=125,
+        high=121,
         low=110,
     )
 
     brick_3 = Brick(
         type="up",
         open=121,
-        close=133.1,
-        high=133.1,
+        close=133.5,
+        high=133.5,
         low=121,
     )
 
     brick_4 = Brick(
         type="up",
-        open=133.1,
-        close=146.1,
-        high=150,
-        low=133.1,
+        open=133.5,
+        close=146,
+        high=146,
+        low=133.5,
     )
 
     brick_5 = Brick(
         type="down",
-        open=131.769,
-        close=118.5921,
-        high=140,
-        low=118.5921,
+        open=133.5,
+        close=118.5,
+        high=133.5,
+        low=118.5,
     )
 
     brick_6 = Brick(
         type="down",
-        open=118.5921,
-        close=106.73289,
-        high=118.5921,
-        low=105,
+        open=118.5,
+        close=107.5,
+        high=118.5,
+        low=107.5,
     )
 
     brick_7 = Brick(
         type="up",
-        open=117.406179,
-        close=129.1467969,
-        high=135,
-        low=117.406179,
+        open=118.5,
+        close=129,
+        high=129,
+        low=118.5,
     )
 
     brick_8 = Brick(
         type="up",
-        open=129.1467969,
-        close=142.06147659,
-        high=145,
-        low=129.1467969,
+        open=129,
+        close=142.5,
+        high=142.5,
+        low=129,
     )
 
+    bricks = [brick_0, brick_1, brick_2, brick_3, brick_4, brick_5, brick_6, brick_7, brick_8]
+
     pb_renko = PBRenko(
-        bricks=[brick_1, brick_2, brick_3, brick_4, brick_5, brick_6, brick_7, brick_8],
+        bricks=bricks,
         percent=percent,
-        number_of_leaks=number_of_leaks,
+        number_of_leaks=0,
     )
 
     pbrenko_creator = PBRenkoCreator()
