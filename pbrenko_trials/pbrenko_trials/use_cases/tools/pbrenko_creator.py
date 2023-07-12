@@ -98,12 +98,12 @@ class PBRenkoCreator:
                             self.add_bricks("down", fcount, gap)
                             gap = d * self.percent / 100
 
-        pb_renko = PBRenko(
+        pbrenko = PBRenko(
             bricks=self.bricks,
             percent=self.percent,
             number_of_leaks=self.number_of_leaks
         )
-        return pb_renko
+        return pbrenko
 
 
     def add_bricks(self, type, count, brick_size, wick=0):
