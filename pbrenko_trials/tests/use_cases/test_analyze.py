@@ -2,7 +2,9 @@ import pytest
 
 from unittest import mock
 from pbrenko_trials.use_cases.analyze import AnalyzeUseCase
+from pbrenko_trials.requests.analyze import build_analyze_request
 from datetime import datetime
+from pbrenko_trials.responses import ResponseTypes
 
 
 @pytest.fixture
@@ -19,12 +21,62 @@ def test_analyze_with_parameters(market_data):
     repo = mock.Mock()
     repo.get_data.return_value = market_data
 
+    request = build_analyze_request({"symbol": symbol, "start_date": start_date, "end_date": end_date})
     analyze_use_case = AnalyzeUseCase()
-    result = analyze_use_case.analyze(repo, symbol, start_date, end_date)
+
+    response = analyze_use_case.analyze(repo, request)
 
     repo.get_data.assert_called_with("BTCUSDT", datetime(2021, 1, 1, 0, 0, 0), datetime(2023, 1, 1, 0, 0, 0))
-    assert result.symbol == "BTCUSDT"
-    assert result.percent == 6.3
-    assert result.score == 0.2062718137073183
-    assert result.start_date == datetime(2021, 1, 1, 0, 0, 0)
-    assert result.end_date == datetime(2023, 1, 1, 0, 0, 0)
+    assert response.value.symbol == "BTCUSDT"
+    assert response.value.percent == 6.3
+    assert response.value.score == 0.2062718137073183
+    assert response.value.start_date == datetime(2021, 1, 1, 0, 0, 0)
+    assert response.value.end_date == datetime(2023, 1, 1, 0, 0, 0)
+
+
+def test_analyze_with_invalid_request():
+    repo = mock.Mock()
+
+    # creating an invalid request
+    request = build_analyze_request()
+    analyze_use_case = AnalyzeUseCase()
+
+    response = analyze_use_case.analyze(repo, request)
+
+    assert bool(response) is False
+    assert response.value == {
+        "type": ResponseTypes.PARAMETERS_ERROR,
+        "message": "parameters: Need 3 parameters: symbol, start_date, end_date. Got 0.",
+    }
+
+
+def test_analyze_with_invalid_resource():
+    repo = mock.Mock()
+    repo.get_data.return_value = []
+
+    request = build_analyze_request({"symbol": "BTCUSDT", "start_date": "202101010000", "end_date": "202301010000"})
+    analyze_use_case = AnalyzeUseCase()
+
+    response = analyze_use_case.analyze(repo, request)
+
+    assert bool(response) is False
+    assert response.value == {
+        "type": ResponseTypes.RESOURCE_ERROR,
+        "message": "No data returned from the repository",
+    }
+
+
+def test_analyze_with_generic_error():
+    repo = mock.Mock()
+    repo.get_data.side_effect = Exception("Just an error message")
+
+    request = build_analyze_request({"symbol": "BTCUSDT", "start_date": "202101010000", "end_date": "202301010000"})
+    analyze_use_case = AnalyzeUseCase()
+
+    response = analyze_use_case.analyze(repo, request)
+
+    assert bool(response) is False
+    assert response.value == {
+        "type": ResponseTypes.SYSTEM_ERROR,
+        "message": "Exception: Just an error message",
+    }
