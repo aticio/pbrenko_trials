@@ -9,7 +9,7 @@ class AnalyzeUseCase:
     def analyze(self, repo, symbol, start_date, end_date):
         start_date_obj = convert_to_date(start_date)
         end_date_obj = convert_to_date(end_date)
-        
+
         data = repo.get_data(symbol, start_date_obj, end_date_obj)
 
         percent = find_optimum_percent(data)
@@ -18,13 +18,12 @@ class AnalyzeUseCase:
         pbrenko = pbrenko_creator.create_pbrenko(data, percent)
         score = calculate_score(pbrenko.bricks, len(data))
 
-
         result = Result(
-            symbol = symbol,
-            percent = percent,
-            score = score,
-            start_date = start_date_obj,
-            end_date = end_date_obj,
+            symbol=symbol,
+            percent=percent,
+            score=score,
+            start_date=start_date_obj,
+            end_date=end_date_obj,
         )
 
         return result
