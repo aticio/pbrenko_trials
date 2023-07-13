@@ -18,6 +18,7 @@ class AnalyzeUseCase:
         pbrenko = pbrenko_creator.create_pbrenko(data, percent)
         score = calculate_score(pbrenko.bricks, len(data))
 
+
         result = Result(
             symbol = symbol,
             percent = percent,
