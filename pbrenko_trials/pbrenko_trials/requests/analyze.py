@@ -30,8 +30,10 @@ def build_analyze_request(parameters=None):
             return invalid_req
 
         if len(parameters) != 3:
-            invalid_req.add_error("parameters", "missing parameter")
-            return invalid_req
+            for key in accepted_parameters:
+                if key not in parameters:
+                    invalid_req.add_error("parameters", "Missing parameter. Key {} is mandatory".format(key))
+                    return invalid_req
 
         for key, value in parameters.items():
             if key not in accepted_parameters:
