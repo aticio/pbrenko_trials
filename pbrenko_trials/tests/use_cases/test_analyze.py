@@ -15,13 +15,14 @@ def market_data():
 def test_analyze_with_parameters(market_data):
     symbol = "BTCUSDT"
     # repo_type = "crypto"
+    interval = "1d"
     start_date = "202101010000"
     end_date = "202301010000"
 
     repo = mock.Mock()
     repo.get_data.return_value = market_data
 
-    request = build_analyze_request({"symbol": symbol, "start_date": start_date, "end_date": end_date})
+    request = build_analyze_request({"symbol": symbol, "interval": interval, "start_date": start_date, "end_date": end_date})
     analyze_use_case = AnalyzeUseCase()
 
     response = analyze_use_case.analyze(repo, request)
@@ -46,15 +47,21 @@ def test_analyze_with_invalid_request():
     assert bool(response) is False
     assert response.value == {
         "type": ResponseTypes.PARAMETERS_ERROR,
-        "message": "parameters: Need 3 parameters: symbol, start_date, end_date. Got 0.",
+        "message": "parameters: Need 4 parameters: symbol, start_date, end_date. Got 0.",
     }
 
 
 def test_analyze_with_invalid_resource():
+    symbol = "BTCUSDT"
+    # repo_type = "crypto"
+    interval = "1d"
+    start_date = "202101010000"
+    end_date = "202301010000"
+
     repo = mock.Mock()
     repo.get_data.return_value = []
 
-    request = build_analyze_request({"symbol": "BTCUSDT", "start_date": "202101010000", "end_date": "202301010000"})
+    request = build_analyze_request({"symbol": symbol, "interval": interval, "start_date": start_date, "end_date": end_date})
     analyze_use_case = AnalyzeUseCase()
 
     response = analyze_use_case.analyze(repo, request)
@@ -67,10 +74,16 @@ def test_analyze_with_invalid_resource():
 
 
 def test_analyze_with_generic_error():
+    symbol = "BTCUSDT"
+    # repo_type = "crypto"
+    interval = "1d"
+    start_date = "202101010000"
+    end_date = "202301010000"
+
     repo = mock.Mock()
     repo.get_data.side_effect = Exception("Just an error message")
 
-    request = build_analyze_request({"symbol": "BTCUSDT", "start_date": "202101010000", "end_date": "202301010000"})
+    request = build_analyze_request({"symbol": symbol, "interval": interval, "start_date": start_date, "end_date": end_date})
     analyze_use_case = AnalyzeUseCase()
 
     response = analyze_use_case.analyze(repo, request)

@@ -21,7 +21,7 @@ class AnalyzeCreateValidRequest:
 
 
 def build_analyze_request(parameters=None):
-    accepted_parameters = ["symbol", "start_date", "end_date"]
+    accepted_parameters = ["symbol", "interval", "start_date", "end_date"]
     invalid_req = AnalyzeCreateInvalidRequest()
 
     if parameters is not None:
@@ -29,7 +29,7 @@ def build_analyze_request(parameters=None):
             invalid_req.add_error("parameters", "Is not iterable")
             return invalid_req
 
-        if len(parameters) != 3:
+        if len(parameters) != 4:
             for key in accepted_parameters:
                 if key not in parameters:
                     invalid_req.add_error("parameters", "Missing parameter. Key {} is mandatory".format(key))
@@ -41,7 +41,7 @@ def build_analyze_request(parameters=None):
                 return invalid_req
 
     else:
-        invalid_req.add_error("parameters", "Need 3 parameters: symbol, start_date, end_date. Got 0.")
+        invalid_req.add_error("parameters", "Need 4 parameters: symbol, start_date, end_date. Got 0.")
         return invalid_req
 
     return AnalyzeCreateValidRequest(parameters=parameters)
