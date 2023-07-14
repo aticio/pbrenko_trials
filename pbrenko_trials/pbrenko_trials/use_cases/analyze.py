@@ -20,8 +20,9 @@ class AnalyzeUseCase:
             start_date_obj = convert_to_date(request.parameters["start_date"])
             end_date_obj = convert_to_date(request.parameters["end_date"])
             symbol = request.parameters["symbol"]
+            interval = request.parameters["interval"]
 
-            data = repo.get_data(symbol, start_date_obj, end_date_obj)
+            data = repo.get_data(symbol, interval, start_date_obj, end_date_obj)
 
             if len(data) == 0:
                 return ResponseFailure(ResponseTypes.RESOURCE_ERROR, "No data returned from the repository")
