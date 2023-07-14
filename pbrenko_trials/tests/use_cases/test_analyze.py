@@ -27,7 +27,7 @@ def test_analyze_with_parameters(market_data):
 
     response = analyze_use_case.analyze(repo, request)
 
-    repo.get_data.assert_called_with("BTCUSDT", datetime(2021, 1, 1, 0, 0, 0), datetime(2023, 1, 1, 0, 0, 0))
+    repo.get_data.assert_called_with(symbol, interval, datetime(2021, 1, 1, 0, 0, 0), datetime(2023, 1, 1, 0, 0, 0))
     assert response.value.symbol == "BTCUSDT"
     assert response.value.percent == 6.3
     assert response.value.score == 0.2062718137073183
