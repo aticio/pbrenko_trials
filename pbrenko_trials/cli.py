@@ -11,7 +11,7 @@ from pbrenko_trials.requests.analyze import build_analyze_request
 APPLICATION_CONFIG_PATH = "config"
 
 
-def app(symbol, repo_type, interval, start_date, end_date):
+def analyze(symbol, repo_type, interval, start_date, end_date):
     if repo_type == "test":
         repo = MemRepo()
     elif repo_type == "crypto":
@@ -52,10 +52,18 @@ def configure_app(config):
 
 if __name__ == "__main__":
     config = sys.argv[1]
-    symbol = sys.argv[2]
-    repo_type = sys.argv[3]
-    interval = sys.argv[4]
-    start_date = sys.argv[5]
-    end_date = sys.argv[6]
+    if sys.argv[2] == "analyze":
+        symbol = sys.argv[3]
+        repo_type = sys.argv[4]
+        interval = sys.argv[5]
+        start_date = sys.argv[6]
+        end_date = sys.argv[7]
+    elif sys.argv[2] == "backtest":
+        symbol = sys.argv[3]
+        repo_type = sys.argv[4]
+        percent = sys.argv[5]
+        interval = sys.argv[6]
+        start_date = sys.argv[7]
+        end_date = sys.argv[8]
     configure_app(config)
-    app(symbol, repo_type, interval, start_date, end_date)
+    analyze(symbol, repo_type, interval, start_date, end_date)
