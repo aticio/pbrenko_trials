@@ -20,7 +20,6 @@ class PBRenkoCreator:
             return []
 
         gap = float(self.data[0]) * self.percent / 100
-
         for i, d in enumerate(self.data):
             if i == 0:
                 if len(self.bricks) == 0:

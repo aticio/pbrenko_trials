@@ -78,7 +78,7 @@ if __name__ == "__main__":
     elif sys.argv[2] == "backtest":
         symbol = sys.argv[3]
         repo_type = sys.argv[4]
-        percent = sys.argv[5]
+        percent = float(sys.argv[5])
         interval = sys.argv[6]
         start_date = sys.argv[7]
         end_date = sys.argv[8]

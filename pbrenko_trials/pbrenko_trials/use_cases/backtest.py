@@ -23,11 +23,11 @@ class BacktestUseCase:
             percent = request.parameters["percent"]
 
             data = repo.get_data(symbol, interval, start_date_obj, end_date_obj)
-
             if len(data) == 0:
                 return ResponseFailure(ResponseTypes.RESOURCE_ERROR, "No data returned from the repository")
 
             pbrenko_creator = PBRenkoCreator()
+
             pbrenko = pbrenko_creator.create_pbrenko(data, percent)
             score = calculate_score(pbrenko.bricks, len(data))
 
