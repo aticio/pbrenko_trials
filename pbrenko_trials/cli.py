@@ -4,16 +4,20 @@ import os
 import json
 
 from pbrenko_trials.repository.memrepo import MemRepo
+from pbrenko_trials.repository.binance.binancerepo import BinanceRepo
 from pbrenko_trials.use_cases.analyze import AnalyzeUseCase
 from pbrenko_trials.requests.analyze import build_analyze_request
 
 APPLICATION_CONFIG_PATH = "config"
 
 
-def app():
-    repo = MemRepo()
+def app(symbol, repo_type, interval, start_date, end_date):
+    if repo_type == "test":
+        repo = MemRepo()
+    elif repo_type == "crypto":
+        repo = BinanceRepo()
 
-    request = build_analyze_request({"symbol": "BTCUSDT", "interval": "1d", "start_date": "202101010000", "end_date": "202301010000"})
+    request = build_analyze_request({"symbol": symbol, "interval": interval, "start_date": start_date, "end_date": end_date})
 
     analyze_use_case = AnalyzeUseCase()
     result = analyze_use_case.analyze(repo, request)
@@ -48,5 +52,10 @@ def configure_app(config):
 
 if __name__ == "__main__":
     config = sys.argv[1]
+    symbol = sys.argv[2]
+    repo_type = sys.argv[3]
+    interval = sys.argv[4]
+    start_date = sys.argv[5]
+    end_date = sys.argv[6]
     configure_app(config)
-    app()
+    app(symbol, repo_type, interval, start_date, end_date)

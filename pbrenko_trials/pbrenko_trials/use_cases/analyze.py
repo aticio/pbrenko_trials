@@ -28,7 +28,15 @@ class AnalyzeUseCase:
                 return ResponseFailure(ResponseTypes.RESOURCE_ERROR, "No data returned from the repository")
 
             percent = find_optimum_percent(data)
-
+            if percent is None:
+                result = Result(
+                    symbol=symbol,
+                    percent=-1,
+                    score=-1,
+                    start_date=start_date_obj,
+                    end_date=end_date_obj,
+                )
+                return ResponseSuccess(result)
             pbrenko_creator = PBRenkoCreator()
             pbrenko = pbrenko_creator.create_pbrenko(data, percent)
             score = calculate_score(pbrenko.bricks, len(data))
