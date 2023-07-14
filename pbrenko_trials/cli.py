@@ -67,6 +67,7 @@ def configure_app(config):
 
 if __name__ == "__main__":
     config = sys.argv[1]
+    configure_app(config)
     if sys.argv[2] == "analyze":
         symbol = sys.argv[3]
         repo_type = sys.argv[4]
@@ -82,4 +83,3 @@ if __name__ == "__main__":
         start_date = sys.argv[7]
         end_date = sys.argv[8]
         backtest(symbol, repo_type, percent, interval, start_date, end_date)
-    configure_app(config)
