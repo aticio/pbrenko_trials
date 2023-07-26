@@ -27,7 +27,6 @@ class AnalyzeUseCase:
             if len(data) == 0:
                 return ResponseFailure(ResponseTypes.RESOURCE_ERROR, "No data returned from the repository")
 
-            print(len(data), (end_date_obj - start_date_obj).days)
             if len(data) * 2 < (end_date_obj - start_date_obj).days:
                 return ResponseFailure(ResponseTypes.RESOURCE_ERROR, "Not enough data point.")
 
