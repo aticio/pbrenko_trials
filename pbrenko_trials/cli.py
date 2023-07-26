@@ -7,8 +7,10 @@ from pbrenko_trials.repository.memrepo import MemRepo
 from pbrenko_trials.repository.binance.binancerepo import BinanceRepo
 from pbrenko_trials.use_cases.analyze import AnalyzeUseCase
 from pbrenko_trials.use_cases.backtest import BacktestUseCase
+from pbrenko_trials.use_cases.list_pairs import list_pairs
 from pbrenko_trials.requests.analyze import build_analyze_request
 from pbrenko_trials.requests.backtest import build_backtest_request
+from pbrenko_trials.domain.result import Result
 
 APPLICATION_CONFIG_PATH = "config"
 
@@ -37,6 +39,29 @@ def backtest(symbol, repo_type, percent, interval, start_date, end_date):
     backtest_use_case = BacktestUseCase()
     result = backtest_use_case.backtest(repo, request)
     print(result.value)
+
+
+def analyze_all(repo_type, interval, start_date, end_date):
+    if repo_type == "test":
+        repo = MemRepo()
+    elif repo_type == "crypto":
+        repo = BinanceRepo()
+
+    response = list_pairs(repo)
+    list_of_results = []
+    for symbol in response.value:
+        request = build_analyze_request({"symbol": symbol, "interval": interval, "start_date": start_date, "end_date": end_date})
+
+        analyze_use_case = AnalyzeUseCase()
+        response = analyze_use_case.analyze(repo, request)
+        print(response.value)
+        if bool(response) is True:
+            result_object = response.value
+            if result_object.score > 0:
+                list_of_results.append(result_object)
+    list_of_results.sort(key=lambda x: x.score, reverse=True)
+    for res in list_of_results:
+        print(res)
 
 
 def setenv(variable, default):
@@ -83,3 +108,9 @@ if __name__ == "__main__":
         start_date = sys.argv[7]
         end_date = sys.argv[8]
         backtest(symbol, repo_type, percent, interval, start_date, end_date)
+    elif sys.argv[2] == "analyze_all":
+        repo_type = sys.argv[3]
+        interval = sys.argv[4]
+        start_date = sys.argv[5]
+        end_date = sys.argv[6]
+        analyze_all(repo_type, interval, start_date, end_date)
