@@ -1,4 +1,4 @@
-class AnalyzeCreateInvalidRequest:
+class AnalyzeAllCreateInvalidRequest:
     def __init__(self):
         self.errors = []
 
@@ -12,7 +12,7 @@ class AnalyzeCreateInvalidRequest:
         return False
 
 
-class AnalyzeCreateValidRequest:
+class AnalyzeAllCreateValidRequest:
     def __init__(self, parameters=None):
         self.parameters = parameters
 
@@ -20,9 +20,9 @@ class AnalyzeCreateValidRequest:
         return True
 
 
-def build_analyze_request(parameters=None):
-    accepted_parameters = ["symbol", "interval", "start_date", "end_date"]
-    invalid_req = AnalyzeCreateInvalidRequest()
+def build_analyze_all_request(parameters=None):
+    accepted_parameters = ["interval", "start_date", "end_date"]
+    invalid_req = AnalyzeAllCreateInvalidRequest()
 
     if parameters is not None:
         if not isinstance(parameters, dict):
@@ -41,7 +41,7 @@ def build_analyze_request(parameters=None):
                 return invalid_req
 
     else:
-        invalid_req.add_error("parameters", "Need 4 parameters: symbol, interval, start_date, end_date. Got 0.")
+        invalid_req.add_error("parameters", "Need 3 parameters: interval, start_date, end_date. Got 0.")
         return invalid_req
 
-    return AnalyzeCreateValidRequest(parameters=parameters)
+    return AnalyzeAllCreateValidRequest(parameters=parameters)

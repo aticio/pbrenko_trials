@@ -47,7 +47,7 @@ def test_analyze_with_invalid_request():
     assert bool(response) is False
     assert response.value == {
         "type": ResponseTypes.PARAMETERS_ERROR,
-        "message": "parameters: Need 4 parameters: symbol, start_date, end_date. Got 0.",
+        "message": "parameters: Need 4 parameters: symbol, interval, start_date, end_date. Got 0.",
     }
 
 
