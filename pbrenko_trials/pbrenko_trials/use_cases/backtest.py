@@ -37,6 +37,7 @@ class BacktestUseCase:
                 score=score,
                 start_date=start_date_obj,
                 end_date=end_date_obj,
+                bricks=pbrenko.bricks,
             )
 
             return ResponseSuccess(result)

@@ -54,14 +54,37 @@ def analyze_all(repo_type, interval, start_date, end_date):
 
         analyze_use_case = AnalyzeUseCase()
         response = analyze_use_case.analyze(repo, request)
-        print(response.value)
         if bool(response) is True:
             result_object = response.value
             if result_object.score > 0:
                 list_of_results.append(result_object)
     list_of_results.sort(key=lambda x: x.score, reverse=True)
     for res in list_of_results:
-        print(res)
+        print(res.symbol, res.percent, res.score)
+
+
+def get_pairs_open_for_position(repo_type, interval, start_date, end_date):
+    if repo_type == "test":
+        repo = MemRepo()
+    elif repo_type == "crypto":
+        repo = BinanceRepo()
+
+    response = list_pairs(repo)
+    list_of_results = []
+    for symbol in response.value:
+        request = build_analyze_request({"symbol": symbol, "interval": interval, "start_date": start_date, "end_date": end_date})
+
+        analyze_use_case = AnalyzeUseCase()
+        response = analyze_use_case.analyze(repo, request)
+        if bool(response) is True:
+            result_object = response.value
+            if result_object.score > 0:
+                if result_object.bricks[-2].type == "down" and result_object.bricks[-1].type == "up":
+                    list_of_results.append(result_object)
+
+    list_of_results.sort(key=lambda x: x.score, reverse=True)
+    for res in list_of_results:
+        print(res.symbol, res.percent, res.score)
 
 
 def setenv(variable, default):
@@ -114,3 +137,9 @@ if __name__ == "__main__":
         start_date = sys.argv[5]
         end_date = sys.argv[6]
         analyze_all(repo_type, interval, start_date, end_date)
+    elif sys.argv[2] == "open_position":
+        repo_type = sys.argv[3]
+        interval = sys.argv[4]
+        start_date = sys.argv[5]
+        end_date = sys.argv[6]
+        get_pairs_open_for_position(repo_type, interval, start_date, end_date)

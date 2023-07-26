@@ -93,3 +93,25 @@ def test_analyze_with_generic_error():
         "type": ResponseTypes.SYSTEM_ERROR,
         "message": "Exception: Just an error message",
     }
+
+
+def test_analyze_with_insufficient_data():
+    symbol = "BTCUSDT"
+    # repo_type = "crypto"
+    interval = "1d"
+    start_date = "202101010000"
+    end_date = "202307260000"
+
+    repo = mock.Mock()
+    repo.get_data.return_value = [42373.73, 42217.87, 42053.66, 42535.94, 44544.86, 43873.56, 40515.7, 39974.44, 40079.17, 38386.89, 37008.16, 38230.33, 37250.01]
+
+    request = build_analyze_request({"symbol": symbol, "interval": interval, "start_date": start_date, "end_date": end_date})
+    analyze_use_case = AnalyzeUseCase()
+
+    response = analyze_use_case.analyze(repo, request)
+
+    assert bool(response) is False
+    assert response.value == {
+        "type": ResponseTypes.RESOURCE_ERROR,
+        "message": "Not enough data point.",
+    }
