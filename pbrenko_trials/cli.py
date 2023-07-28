@@ -5,12 +5,14 @@ import json
 
 from pbrenko_trials.repository.memrepo import MemRepo
 from pbrenko_trials.repository.binance.binancerepo import BinanceRepo
+from pbrenko_trials.repository.yahoo.yahoorepo import YahooRepo
+from pbrenko_trials.repository.yahoo.yahoorepo_tr import YahooRepoTR
+from pbrenko_trials.repository.yahoo.yahoorepo_fx import YahooRepoFX
 from pbrenko_trials.use_cases.analyze import AnalyzeUseCase
 from pbrenko_trials.use_cases.backtest import BacktestUseCase
 from pbrenko_trials.use_cases.list_pairs import list_pairs
 from pbrenko_trials.requests.analyze import build_analyze_request
 from pbrenko_trials.requests.backtest import build_backtest_request
-from pbrenko_trials.domain.result import Result
 
 APPLICATION_CONFIG_PATH = "config"
 
@@ -20,6 +22,12 @@ def analyze(symbol, repo_type, interval, start_date, end_date):
         repo = MemRepo()
     elif repo_type == "crypto":
         repo = BinanceRepo()
+    elif repo_type == "stock":
+        repo = YahooRepo()
+    elif repo_type == "stock-tr":
+        repo = YahooRepoTR()
+    elif repo_type == "fx":
+        repo = YahooRepoFX()
 
     request = build_analyze_request({"symbol": symbol, "interval": interval, "start_date": start_date, "end_date": end_date})
 
@@ -33,6 +41,12 @@ def backtest(symbol, repo_type, percent, interval, start_date, end_date):
         repo = MemRepo()
     elif repo_type == "crypto":
         repo = BinanceRepo()
+    elif repo_type == "stock":
+        repo = YahooRepo()
+    elif repo_type == "stock-tr":
+        repo = YahooRepoTR()
+    elif repo_type == "fx":
+        repo = YahooRepoFX()
 
     request = build_backtest_request({"symbol": symbol, "percent": percent, "interval": interval, "start_date": start_date, "end_date": end_date})
 
@@ -46,6 +60,12 @@ def analyze_all(repo_type, interval, start_date, end_date):
         repo = MemRepo()
     elif repo_type == "crypto":
         repo = BinanceRepo()
+    elif repo_type == "stock":
+        repo = YahooRepo()
+    elif repo_type == "stock-tr":
+        repo = YahooRepoTR()
+    elif repo_type == "fx":
+        repo = YahooRepoFX()
 
     response = list_pairs(repo)
     list_of_results = []
@@ -68,6 +88,12 @@ def get_pairs_open_for_position(repo_type, interval, start_date, end_date):
         repo = MemRepo()
     elif repo_type == "crypto":
         repo = BinanceRepo()
+    elif repo_type == "stock":
+        repo = YahooRepo()
+    elif repo_type == "stock-tr":
+        repo = YahooRepoTR()
+    elif repo_type == "fx":
+        repo = YahooRepoFX()
 
     response = list_pairs(repo)
     list_of_results = []
