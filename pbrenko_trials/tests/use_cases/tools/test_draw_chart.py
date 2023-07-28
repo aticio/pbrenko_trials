@@ -7,6 +7,8 @@ import os
 
 @mock.patch.dict(os.environ, {"CHART_PATH": "/workspaces/pbrenko_trials/pbrenko_trials/tests/use_cases/tools/images"})
 def test_draw_chart():
+    if os.path.exists("/workspaces/pbrenko_trials/pbrenko_trials/tests/use_cases/tools/images/chart.png"):
+        os.remove("/workspaces/pbrenko_trials/pbrenko_trials/tests/use_cases/tools/images/chart.png")
     brick_1 = Brick(
         type="up",
         open=100,
