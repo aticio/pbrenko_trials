@@ -6,5 +6,9 @@
     {
       "name": "BINANCE_EXCHANGE_INFO",
       "value": "https://api.binance.com/api/v3/exchangeInfo"
+    },
+    {
+      "name": "CHART_PATH",
+      "value": "/workspaces/pbrenko_trials/pbrenko_trials/images"
     }
 ]

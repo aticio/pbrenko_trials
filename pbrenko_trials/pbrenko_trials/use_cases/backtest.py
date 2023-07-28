@@ -1,6 +1,7 @@
 from pbrenko_trials.use_cases.tools.pbrenko_creator import PBRenkoCreator
 from pbrenko_trials.use_cases.tools.score import calculate_score
 from pbrenko_trials.use_cases.tools.date_converter import convert_to_date
+from pbrenko_trials.use_cases.tools.draw_chart import draw_chart
 from pbrenko_trials.domain.result import Result
 from pbrenko_trials.responses import (
     ResponseSuccess,
@@ -39,6 +40,8 @@ class BacktestUseCase:
                 end_date=end_date_obj,
                 bricks=pbrenko.bricks,
             )
+
+            draw_chart(pbrenko.bricks, percent, symbol + "-" + request.parameters["interval"] + "-" + request.parameters["start_date"] + "-" + request.parameters["end_date"])
 
             return ResponseSuccess(result)
         except Exception as exc:
