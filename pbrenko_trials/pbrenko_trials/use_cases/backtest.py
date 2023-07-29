@@ -12,6 +12,9 @@ from pbrenko_trials.responses import (
 
 
 class BacktestUseCase:
+    def __init__(self, drawing_enabled=False):
+        self.drawing_enabled = drawing_enabled
+
     def backtest(self, repo, request):
         if not request:
             return build_response_from_invalid_request(request)
@@ -41,7 +44,8 @@ class BacktestUseCase:
                 bricks=pbrenko.bricks,
             )
 
-            draw_chart(pbrenko.bricks, percent, symbol + "-" + request.parameters["interval"] + "-" + request.parameters["start_date"] + "-" + request.parameters["end_date"])
+            if self.drawing_enabled is True:
+                draw_chart(pbrenko.bricks, percent, symbol + "-" + request.parameters["interval"] + "-" + request.parameters["start_date"] + "-" + request.parameters["end_date"])
 
             return ResponseSuccess(result)
         except Exception as exc:

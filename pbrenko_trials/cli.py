@@ -31,7 +31,7 @@ def analyze(symbol, repo_type, interval, start_date, end_date):
 
     request = build_analyze_request({"symbol": symbol, "interval": interval, "start_date": start_date, "end_date": end_date})
 
-    analyze_use_case = AnalyzeUseCase()
+    analyze_use_case = AnalyzeUseCase(drawing_enabled=True)
     result = analyze_use_case.analyze(repo, request)
     print(result.value)
 
@@ -50,7 +50,7 @@ def backtest(symbol, repo_type, percent, interval, start_date, end_date):
 
     request = build_backtest_request({"symbol": symbol, "percent": percent, "interval": interval, "start_date": start_date, "end_date": end_date})
 
-    backtest_use_case = BacktestUseCase()
+    backtest_use_case = BacktestUseCase(drawing_enabled=True)
     result = backtest_use_case.backtest(repo, request)
     print(result.value)
 
