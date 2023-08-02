@@ -52,4 +52,5 @@ def draw_chart(bricks, percent, file_name):
     ticks = np.arange(min_val - brick_width, y_max + (y_max * 0.02), brick_width * 2)
     plt.yticks(ticks)
     plt.grid(linestyle='--', color="#ccd8c0")
+    file_name = file_name.replace(".", "-")
     plt.savefig(chart_path + "/" + file_name)

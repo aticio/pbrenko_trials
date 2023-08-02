@@ -22,7 +22,7 @@ class BinanceRepo:
     def filter_usdt_pairs(self, pairs):
         usdt_paris = []
         for pair in pairs:
-            if "USDT" in pair and "BUSD" not in pair and "USDC" not in pair and "LUNA" not in pair:
+            if "USDT" in pair and "BUSD" not in pair and "USDC" not in pair and "LUNA" not in pair and "DOWN" not in pair:
                 usdt_paris.append(pair)
         return usdt_paris
 
