@@ -37,7 +37,6 @@ def analyze(symbol, repo_type, interval, start_date, end_date):
         print(b)
 
 
-
 def backtest(symbol, repo_type, percent, interval, start_date, end_date):
     if repo_type == "test":
         repo = MemRepo()

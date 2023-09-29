@@ -5,10 +5,10 @@ from pbrenko_trials.domain.brick import Brick
 
 
 @dataclasses.dataclass
-class Result:
+class PatternResult:
     symbol: str
     percent: float
-    score: float
     start_date: datetime
     end_date: datetime
     bricks: List[Brick]
+    found_pattern: str
