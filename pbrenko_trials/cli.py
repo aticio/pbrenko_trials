@@ -33,7 +33,9 @@ def analyze(symbol, repo_type, interval, start_date, end_date):
 
     analyze_use_case = AnalyzeUseCase(drawing_enabled=True)
     result = analyze_use_case.analyze(repo, request)
-    print(result.value)
+    for b in result.value.bricks:
+        print(b)
+
 
 
 def backtest(symbol, repo_type, percent, interval, start_date, end_date):
@@ -52,7 +54,11 @@ def backtest(symbol, repo_type, percent, interval, start_date, end_date):
 
     backtest_use_case = BacktestUseCase(drawing_enabled=True)
     result = backtest_use_case.backtest(repo, request)
-    print(result.value)
+
+    for b in result.value.bricks:
+        print(b)
+    print("------------")
+    print("symbol:", result.value.symbol, "percent:", result.value.percent, "score:", result.value.score)
 
 
 def analyze_all(repo_type, interval, start_date, end_date):
@@ -169,3 +175,5 @@ if __name__ == "__main__":
         start_date = sys.argv[5]
         end_date = sys.argv[6]
         get_pairs_open_for_position(repo_type, interval, start_date, end_date)
+    else:
+        print("Command not found.")

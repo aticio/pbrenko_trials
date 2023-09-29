@@ -76,6 +76,6 @@ def test_draw_chart():
     bricks = [brick_1, brick_2, brick_3, brick_4, brick_5, brick_6, brick_7, brick_8]
     percent = 10
 
-    draw_chart(bricks, percent, "chart.png")
+    draw_chart(bricks, percent, "chart")
     file_exists = exists("/workspaces/pbrenko_trials/pbrenko_trials/tests/use_cases/tools/images/chart.png")
     assert file_exists is True
