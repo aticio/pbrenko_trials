@@ -1,8 +1,9 @@
 from pbrenko_trials.use_cases.tools.find_optimum_percent import find_optimum_percent
 from pbrenko_trials.use_cases.tools.pbrenko_creator import PBRenkoCreator
+from pbrenko_trials.use_cases.tools.score import calculate_score
 from pbrenko_trials.use_cases.tools.date_converter import convert_to_date
 from pbrenko_trials.use_cases.tools.draw_chart import draw_chart
-from pbrenko_trials.domain.pattern_result import PatternResult
+from pbrenko_trials.domain.result import Result
 from pbrenko_trials.responses import (
     ResponseSuccess,
     ResponseFailure,
@@ -11,11 +12,11 @@ from pbrenko_trials.responses import (
 )
 
 
-class FindPatternsUseCase:
+class AnalyzeBestUseCase:
     def __init__(self, drawing_enabled=False):
         self.drawing_enabled = drawing_enabled
 
-    def find_patterns(self, repo, request):
+    def analyze_best(self, repo, request):
         if not request:
             return build_response_from_invalid_request(request)
 
@@ -26,6 +27,7 @@ class FindPatternsUseCase:
             interval = request.parameters["interval"]
 
             data = repo.get_data(symbol, interval, start_date_obj, end_date_obj)
+
             if len(data) == 0:
                 return ResponseFailure(ResponseTypes.RESOURCE_ERROR, "No data returned from the repository")
 
@@ -34,37 +36,42 @@ class FindPatternsUseCase:
 
             percent = find_optimum_percent(data)
             if percent is None:
-                pattern_result = PatternResult(
+                result = Result(
                     symbol=symbol,
                     percent=-1,
+                    score=-1,
                     start_date=start_date_obj,
                     end_date=end_date_obj,
-                    found_pattern=""
                 )
-                return ResponseSuccess(pattern_result)
+                return ResponseSuccess(result)
+
+            scores = []
+            for i in range(int(percent * 10), 101):
+                pbrenko_creator = PBRenkoCreator()
+                pbrenko = pbrenko_creator.create_pbrenko(data, i/10)
+                score = calculate_score(pbrenko.bricks, len(data))
+                scores.append((i/10, score))
+
+            best_score_percent = scores[0]
+            for i in scores:
+                if i[1] > best_score_percent[1]:
+                    best_score_percent = i
+
             pbrenko_creator = PBRenkoCreator()
-            pbrenko = pbrenko_creator.create_pbrenko(data, percent)
+            pbrenko = pbrenko_creator.create_pbrenko(data, best_score_percent[0])
 
-            found_pattern = None
-            if pbrenko.bricks[-1].type == "up" and pbrenko.bricks[-2].type == "up" and pbrenko.bricks[-3].type == "down" and pbrenko.bricks[-4].type == "up" and pbrenko.bricks[-5].type == "up":
-                found_pattern = "one-back pattern"
-            elif pbrenko.bricks[-1].type == "up" and pbrenko.bricks[-2].type == "up" and pbrenko.bricks[-3].type == "up" and pbrenko.bricks[-4].type == "down" and pbrenko.bricks[-5].type == "down" and pbrenko.bricks[-6].type == "up" and pbrenko.bricks[-7].type == "up" and pbrenko.bricks[-8].type == "up":
-                found_pattern = "two-back pattern"
-            elif pbrenko.bricks[-1].type == "up" and pbrenko.bricks[-2].type == "up" and pbrenko.bricks[-3].type == "down" and pbrenko.bricks[-4].type == "up" and pbrenko.bricks[-5].type == "down":
-                found_pattern = "zigzag pattern"
-
-            pattern_result = PatternResult(
+            result = Result(
                 symbol=symbol,
-                percent=percent,
+                percent=best_score_percent[0],
+                score=best_score_percent[1],
                 start_date=start_date_obj,
                 end_date=end_date_obj,
                 bricks=pbrenko.bricks,
-                found_pattern=found_pattern
             )
 
-            if self.drawing_enabled is True and found_pattern is not None:
+            if self.drawing_enabled is True:
                 draw_chart(pbrenko.bricks, percent, symbol + "-" + request.parameters["interval"] + "-" + request.parameters["start_date"] + "-" + request.parameters["end_date"])
 
-            return ResponseSuccess(pattern_result)
+            return ResponseSuccess(result)
         except Exception as exc:
             return ResponseFailure(ResponseTypes.SYSTEM_ERROR, exc)
