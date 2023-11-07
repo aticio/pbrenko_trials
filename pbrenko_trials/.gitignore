@@ -1,6 +1,6 @@
 # By developer
-pbrenko_trials/results
-pbrenko_trials/images
+pbrenko_trials/results/
+pbrenko_trials/images/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
