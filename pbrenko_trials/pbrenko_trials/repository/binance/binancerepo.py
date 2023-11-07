@@ -16,8 +16,8 @@ class BinanceRepo:
     def list_pairs(self):
         exchange_info = self.get_exchange_info()
         pairs = self.get_pairs(exchange_info)
-        filtered_pairs = self.filter_usdt_pairs(pairs)
-        return filtered_pairs
+        # filtered_pairs = self.filter_usdt_pairs(pairs)
+        return pairs
 
     def filter_usdt_pairs(self, pairs):
         usdt_paris = []

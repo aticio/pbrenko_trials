@@ -13,4 +13,5 @@ def list_pairs(repo):
 
     response = ResponseSuccess()
     response.value = pairs
+
     return response
