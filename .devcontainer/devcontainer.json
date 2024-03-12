@@ -2,6 +2,6 @@
   "image": "mcr.microsoft.com/devcontainers/universal:2",
   "features": {
   },
-  "forwardPorts": [3000, 3001],
-  "postAttachCommand": "gh codespace ports visibility 3000:public -c $CODESPACE_NAME"
+  "forwardPorts": [8080],
+  "postAttachCommand": "gh codespace ports visibility 8080:public -c $CODESPACE_NAME"
 }
