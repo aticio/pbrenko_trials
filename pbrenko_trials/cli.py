@@ -64,6 +64,7 @@ def analyze_best(symbol, repo_type, interval, start_date, end_date):
 
     analyze_best_use_case = AnalyzeBestUseCase(drawing_enabled=True)
     result = analyze_best_use_case.analyze_best(repo, request)
+    print(result.value)
     print("symbol:", result.value.symbol, "percent:", result.value.percent, "score:", result.value.score)
     for b in result.value.bricks:
         print(b)
@@ -92,6 +93,35 @@ def backtest(symbol, repo_type, percent, interval, start_date, end_date):
         print(b)
     print("------------")
     print("symbol:", result.value.symbol, "percent:", result.value.percent, "score:", result.value.score)
+
+
+def backtest_all(repo_type, percent, interval, start_date, end_date):
+    if repo_type == "test":
+        repo = MemRepo()
+    elif repo_type == "crypto":
+        repo = BinanceRepo()
+    elif repo_type == "stock":
+        repo = YahooRepo()
+    elif repo_type == "stock-tr":
+        repo = TWRepoTR()
+    elif repo_type == "fx":
+        repo = YahooRepoFX()
+    elif repo_type == "stock-all":
+        repo = TWRepoAllStock()
+
+    response = list_pairs(repo)
+    print(response.value)
+    list_of_results = []
+    for symbol in response.value:
+        request = build_backtest_request({"symbol": symbol, "percent": percent, "interval": interval, "start_date": start_date, "end_date": end_date})
+
+        backtest_use_case = BacktestUseCase(drawing_enabled=True)
+        response = backtest_use_case.backtest(repo, request)
+        if bool(response) is True:
+            list_of_results.append(response.value)
+    list_of_results.sort(key=lambda x: x.score, reverse=True)
+    for res in list_of_results:
+        print(res.symbol, res.percent, res.score)        
 
 
 def analyze_all(repo_type, interval, start_date, end_date):
@@ -318,6 +348,13 @@ if __name__ == "__main__":
         start_date = sys.argv[7]
         end_date = sys.argv[8]
         backtest(symbol, repo_type, percent, interval, start_date, end_date)
+    elif sys.argv[2] == "backtest_all":
+        repo_type = sys.argv[3]
+        percent = float(sys.argv[4])
+        interval = sys.argv[5]
+        start_date = sys.argv[6]
+        end_date = sys.argv[7]
+        backtest_all(repo_type, percent, interval, start_date, end_date)
     elif sys.argv[2] == "analyze_all":
         repo_type = sys.argv[3]
         interval = sys.argv[4]

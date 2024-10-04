@@ -17,6 +17,7 @@ def calculate_score(bricks, raw_data_length):
     if sign_changes == 0:
         return -1.0
     score = balance / sign_changes
+    print(score, raw_data_length, len(bricks))
     if score >= 0 and price_ratio >= 1:
         score = ln(score + 1) * ln(price_ratio)
         return score
